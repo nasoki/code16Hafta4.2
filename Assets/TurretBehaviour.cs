@@ -8,6 +8,8 @@ public class TurretBehaviour : MonoBehaviour
     public GameObject weaponBase;
     public GameObject weaponHead;
     public GameObject tank;
+    public Transform projectileSpawnPoint;
+    public GameObject bulletPrefab;
     Vector2 weaponRotation;
     float speedMultiplier = 5f;
     // Start is called before the first frame update
@@ -29,7 +31,21 @@ public class TurretBehaviour : MonoBehaviour
         Vector3 playerForward = new Vector3(0f, 0f, Input.GetAxis("Vertical"));
         Vector3 hiz = playerForward * Time.deltaTime * speedMultiplier;
         transform.Translate(hiz);
-        //todo - ileri hareket, hedef alma, tagli objeleri yok etme
-        //tank.GetComponent<Rigidbody>().rotation = Quaternion.Euler(0, Input.GetAxis("Horizontal") + 100, 0);
+
+        if (Input.GetAxis("Fire1") == 1)
+        {
+            Shoot();
+        }
+    }
+    void Shoot()
+    {
+        GameObject projectile = Instantiate(bulletPrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+        Rigidbody bulletRb = projectile.GetComponent<Rigidbody>();
+
+        if (bulletRb != null)
+        {
+            float bulletSpeed = 50f; // Adjust the speed as needed
+            bulletRb.AddForce(projectile.transform.forward * bulletSpeed, ForceMode.VelocityChange);
+        }
     }
 }
